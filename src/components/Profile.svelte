@@ -18,7 +18,6 @@
         class="w-full object-cover"
         loading="lazy"
       />
-      <figcaption class="p-3 text-center text-xs opacity-70">標準衣装: ダボダボのパーカー + 白キャミ</figcaption>
     </figure>
 
     <div class="glass rounded-2xl p-6">
@@ -32,7 +31,7 @@
       </dl>
       <div class="divider my-5"></div>
       <p class="text-sm leading-relaxed opacity-80">
-        3Dモデルは VRoid Studio 製で、このページのトップでは実際に触れ合えます。衣装は着せ替え形式で管理していて、チャイナドレスと水着も計画中です（サイトへの追加は今後対応予定）。
+        3Dモデルは VRoid Studio 製で、このページのトップでは実際に触れ合えます。
       </p>
     </div>
   </div>
