@@ -41,6 +41,8 @@ export class Engine {
   private vrm: VRM | null = null;
   private modelHeight = 1.5;
   private mode: ViewMode = 'touch';
+  private currentPreset: PresetName = 'full';
+  private wasPortrait = false;
 
   private orbit: OrbitState = {
     theta: 0,
@@ -161,15 +163,28 @@ export class Engine {
     return this.mode;
   }
 
+  private isPortrait(): boolean {
+    return (this.camera.aspect || 1) < 0.9;
+  }
+
+  // 縦長画面ではモデルが画面からはみ出しやすいので、その分だけカメラを引く
+  private frameScale(): number {
+    const a = this.camera.aspect || 1;
+    if (a >= 0.9) return 1;
+    return Math.min(1.6, Math.max(1, 0.68 / a));
+  }
+
   goToPreset(name: PresetName, instant = false): void {
+    this.currentPreset = name;
     const h = this.modelHeight;
-    const base = { phi: 1.34, radius: h * 1.3, targetY: h * 0.56 };
+    const s = this.frameScale();
+    const base = { phi: 1.34, radius: h * 1.3 * Math.pow(s, 0.6), targetY: h * 0.56 };
     const presets: Record<PresetName, Partial<OrbitState> & { targetY?: number }> = {
-      full: { theta: 0, phi: 1.42, radius: h * 2.05, targetY: h * 0.5 },
+      full: { theta: 0, phi: 1.42, radius: h * 2.05 * s, targetY: h * (this.isPortrait() ? 0.58 : 0.5) },
       front: { theta: 0, ...base },
       side: { theta: Math.PI / 2, ...base },
       back: { theta: Math.PI, ...base },
-      face: { theta: 0, phi: 1.24, radius: h * 0.52, targetY: h * 0.86 },
+      face: { theta: 0, phi: 1.24, radius: h * 0.52 * Math.min(s, 1.2), targetY: h * 0.86 },
     };
     const p = presets[name];
     this.orbitGoal.theta = p.theta ?? this.orbitGoal.theta;
@@ -234,6 +249,11 @@ export class Engine {
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    const portrait = this.isPortrait();
+    if (portrait !== this.wasPortrait) {
+      this.wasPortrait = portrait;
+      if (this.vrm) this.goToPreset(this.currentPreset, true);
+    }
   }
 
   private loop = (): void => {
