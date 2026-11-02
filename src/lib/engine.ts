@@ -136,8 +136,6 @@ export class Engine {
   private armR: ArmRig | null = null;
   private arms: ArmRig[] = [];
   private idlePose: 'pocket' | 'down' = 'pocket';
-  private handsOut = false;
-  private reactUntil = 0;
   private hipsNode: THREE.Object3D | null = null;
   private grabPoint = new THREE.Vector3();
   private grabPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -0.15);
@@ -651,8 +649,7 @@ export class Engine {
 
   private updateArms(dt: number): void {
     if (!this.vrm) return;
-    // 掴んでいる間・撫でられている間・反応中は、両手をポケットから出す
-    this.handsOut = this.armR?.mode === 'grabbed' || this.patting || this.elapsed < this.reactUntil;
+    // 反応中・掴み中でもポケットから手は出さない (待機ポーズの切替のみで手が出入りする)
     for (const rig of this.arms) this.updateRig(rig, dt);
     const arm = this.armR;
     if (arm && arm.mode === 'grabbed') {
@@ -713,8 +710,7 @@ export class Engine {
       for (let i = 0; i < rig.fingers.length; i++) rig.fingers[i].quaternion.slerp(rig.fingerRest[i], k);
       return;
     }
-    const want: 'pocket' | 'rest' =
-      this.idlePose === 'pocket' && !this.handsOut ? 'pocket' : 'rest';
+    const want: 'pocket' | 'rest' = this.idlePose === 'pocket' ? 'pocket' : 'rest';
     if (want !== rig.homeKind || rig.needCrossfade) {
       this.startCrossfade(rig, want);
       rig.needCrossfade = false;
@@ -818,6 +814,8 @@ export class Engine {
   private tryStartGrab(e: PointerEvent): boolean {
     const arm = this.armR;
     if (!arm) return false;
+    // ポケットに入れている間は指先を掴めない (手が出ていないので掴む対象がない)
+    if (this.idlePose === 'pocket') return false;
     const tipPx = this.toScreenPx(arm.tip.getWorldPosition(this.tA));
     const handPx = this.toScreenPx(arm.hand.getWorldPosition(this.tB));
     const d = Math.min(
@@ -854,14 +852,12 @@ export class Engine {
   private onPoke(at: THREE.Vector3): void {
     if (this.elapsed < this.pokeCooldownUntil) return;
     this.pokeCooldownUntil = this.elapsed + 0.5;
-    this.reactUntil = this.elapsed + 1.6;
     this.pulse('surprised', 0.85, 0.4);
     this.pulse('happy', 0.5, 1.1);
     this.spawnHearts(at, 2);
   }
 
   private onPatStroke(dx: number): void {
-    this.reactUntil = this.elapsed + 1.6;
     this.pulse('happy', 0.65, 1);
     this.pulse('relaxed', 0.55, 1);
     if (Math.abs(dx) > 2) {
@@ -875,7 +871,10 @@ export class Engine {
   }
 
   private updateCursorHint(e: PointerEvent): void {
-    if (!this.armR) return;
+    if (!this.armR || this.idlePose === 'pocket') {
+      this.canvas.style.cursor = '';
+      return;
+    }
     const tipPx = this.toScreenPx(this.armR.tip.getWorldPosition(this.tA));
     const d = Math.hypot(e.clientX - tipPx.x, e.clientY - tipPx.y);
     this.canvas.style.cursor = d < 80 ? 'grab' : '';
