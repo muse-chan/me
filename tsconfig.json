@@ -1,0 +1,1 @@
+{"compilerOptions":{"esModuleInterop":true,"forceConsistentCasingInFileNames":true,"isolatedModules":true,"module":"ESNext","moduleResolution":"bundler","noEmit":true,"skipLibCheck":true,"strict":true,"target":"ESNext","types":["svelte","vite/client"]},"include":["src","vite.config.ts"]}
