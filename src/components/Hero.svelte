@@ -33,6 +33,13 @@
     engine?.setMode(m);
   }
 
+  let idlePose = $state<'pocket' | 'down'>('pocket');
+
+  function toggleIdlePose() {
+    idlePose = idlePose === 'pocket' ? 'down' : 'pocket';
+    engine?.setIdlePose(idlePose);
+  }
+
   function goPreset(p: PresetName) {
     setMode('camera');
     engine?.goToPreset(p);
@@ -107,11 +114,14 @@
           <button class="btn btn-xs btn-ghost shrink-0 border border-primary/20 sm:btn-sm" onclick={() => engine?.resetCamera()}>
             リセット
           </button>
+          <button class="btn btn-xs btn-ghost shrink-0 border border-primary/20 sm:btn-sm" onclick={toggleIdlePose}>
+            {idlePose === 'pocket' ? '手を下ろす' : 'ポケットに入れる'}
+          </button>
         </div>
       </div>
       <p class="px-2 text-center text-[11px] opacity-60 sm:text-xs">
         {#if mode === 'touch'}
-          さわるモード: ポインターを動かすと目線で追いかけます（触る・掴むは今後追加予定）
+          さわるモード: 指先を掴んで引っ張ったり、頭を撫でたり、頬や胸をつついたりできます
         {:else}
           カメラモード: ドラッグで回転、ホイール / ピンチでズーム、右ドラッグ / 2本指で平行移動
         {/if}
