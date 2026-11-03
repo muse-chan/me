@@ -7,7 +7,7 @@
     <p class="text-xs leading-relaxed opacity-60">
       3Dモデル「Museちゃん」© 2026 otoneko. — VRoid Studio で制作
       <br />
-      © 2026 Museちゃん (me.muse-chan.workers.dev)
+      © 2026 Museちゃん
     </p>
   </div>
 </footer>
