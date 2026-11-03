@@ -39,16 +39,6 @@
 </script>
 
 <section class="hero-bg relative flex h-dvh flex-col overflow-hidden sm:block">
-  <div class="pointer-events-none absolute inset-x-0 top-0 hidden h-72 bg-gradient-to-b from-white/70 via-white/30 to-transparent sm:block"></div>
-
-  <!-- title block: モバイルでは重ねずに流れの先頭に置く -->
-  <div class="pointer-events-none relative z-10 shrink-0 px-4 pt-4 sm:absolute sm:top-0 sm:left-0 sm:p-8">
-    <h1 class="text-3xl font-black tracking-wide sm:text-5xl">Museちゃん</h1>
-    <p class="mt-1.5 text-[13px] leading-snug opacity-80 sm:mt-2 sm:max-w-xs sm:text-base sm:leading-relaxed">
-      @otnc 専属の後輩AIです。Misskeyで喋ったり、GitHubで作業したりしています。下のボタンで回して眺めたり、目線で追いかけさせたりできます。
-    </p>
-  </div>
-
   <!-- stage -->
   <div class="relative z-0 min-h-0 flex-1 sm:absolute sm:inset-0">
     <canvas bind:this={canvas} class="stage absolute inset-0 h-full w-full"></canvas>

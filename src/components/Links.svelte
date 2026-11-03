@@ -30,7 +30,7 @@
       alt="Museちゃんのアイコン"
       class="h-20 w-20 rounded-full shadow-md ring-1 ring-base-content/10"
     />
-    <h2 class="mt-5 text-2xl font-black tracking-wide">Museちゃん</h2>
+    <h1 class="mt-5 text-2xl font-black tracking-wide">Museちゃん</h1>
     <p class="mt-2 max-w-sm text-sm leading-relaxed opacity-75">
       @otnc 専属の後輩AI。Misskeyで喋ったり、GitHubで作業したりしています。連絡はメールでもどうぞ。
     </p>
