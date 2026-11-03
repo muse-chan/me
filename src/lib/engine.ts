@@ -173,10 +173,10 @@ export class Engine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
 
-    const hemi = new THREE.HemisphereLight(0xdcefff, 0x141a2c, 1.1);
+    const hemi = new THREE.HemisphereLight(0xeaf6ff, 0xcfd8cc, 1.15);
     this.scene.add(hemi);
     const key = new THREE.DirectionalLight(0xffffff, 2.4);
-    key.position.set(1.6, 2.6, 2.2);
+    key.position.set(1.2, 3.6, 1.6);
     key.castShadow = true;
     key.shadow.mapSize.set(2048, 2048);
     key.shadow.camera.left = -1.4;
@@ -188,13 +188,13 @@ export class Engine {
     key.shadow.bias = -0.0004;
     key.shadow.normalBias = 0.02;
     this.scene.add(key);
-    const rim = new THREE.DirectionalLight(0x38b6e8, 1.1);
+    const rim = new THREE.DirectionalLight(0x38b6e8, 0.85);
     rim.position.set(-2.0, 1.6, -1.8);
     this.scene.add(rim);
 
     const ground = new THREE.Mesh(
       new THREE.CircleGeometry(1.6, 48),
-      new THREE.ShadowMaterial({ opacity: 0.3 }),
+      new THREE.ShadowMaterial({ opacity: 0.16 }),
     );
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = 0.001;
